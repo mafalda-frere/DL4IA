@@ -24,7 +24,7 @@ Schedule (First edition, 2026)
 
 .. toctree::
    :caption: Tutorials
-   :maxdepth: 2
+   :maxdepth: 1
 
    tutorials/sits_classification/sits_classification.ipynb
    tutorials/learning_visual_representations/learning_visual_representations.ipynb
