@@ -83,7 +83,6 @@ class PositionalEncoding(nn.Module):
 
     def _get_sinusoid_encoding_table(self, n_position, d_hid):
         ''' Sinusoid position encoding table '''
-        # TODO: make it with torch instead of numpy
 
         def get_position_angle_vec(position):
             return [position / np.power(10000, 2 * (hid_j // 2) / d_hid) for hid_j in range(d_hid)]
@@ -95,6 +94,8 @@ class PositionalEncoding(nn.Module):
         return torch.FloatTensor(sinusoid_table).unsqueeze(0)
 
     def forward(self, x):
+        """TODO: update forward function to return the positional embedding only.
+        """
         return x + self.pos_table[:, :x.size(1)].clone().detach()
     
 
