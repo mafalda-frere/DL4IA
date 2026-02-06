@@ -62,6 +62,7 @@ def compute_dataset_activations(model, dataset, layer, batch_size=64):
 
 def maximize_img_response(model, img_size, layer, filter_id, device='cuda', n_it=50000, wd=1e-5, lr=3, reg_step=5):
     """TODO: complete.
+    A L2 regularization is combined with a Gaussian blur operator applied every reg_step steps.
     """
     if device == 'cuda' and torch.cuda.is_available():
         device = 'cuda'
