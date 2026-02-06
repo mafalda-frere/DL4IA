@@ -13,6 +13,7 @@ from dataset import fastMriData, kspace_mask
 from models.automap import Automap
 from utils import get_params
 
+# à compléter : pred et loss
 
 def main(cfg):
     os.makedirs(os.path.dirname(cfg['res_dir']), exist_ok=True)

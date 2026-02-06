@@ -7,11 +7,17 @@ import numpy as np
 from typing import Union, Tuple, Optional, List
 
 
-def dates2doys(dates: list[str]):
+def dates2doys(dates: list[str]) -> torch.Tensor:
     '''TODO: convert a list of dates (list of str) 
     to a list of days of year.
     '''
-    raise NotImplementedError
+    days=[]
+    for date in dates:
+        month=date[5:7]
+        day=date[8:]
+        day=int(month)*30+int(day)
+        days.append(day)
+    return torch.tensor(days).long()
 
 
 def pad_tensor(x: torch.Tensor, l: int, pad_value=0.):
@@ -30,22 +36,21 @@ def fill_ts(ts: torch.Tensor, doys: torch.Tensor, full_doys: torch.Tensor):
         full_doys: complete list of days of year (including missing dates)
     '''
     full_length = len(full_doys)
-    ts = pad_tensor(ts, full_length, pad_value=torch.nan)
-    missing_doys = torch.tensor(list(
-        set(full_doys.tolist()) - set(doys.tolist())
+    ts = pad_tensor(ts, full_length, pad_value=torch.nan)   # fill with NaN padding
+    missing_doys = torch.tensor(list(       # extract missing doys
+        set(full_doys.tolist()) - set(doys.tolist())    
     ))
-    missing_doys, _ = missing_doys.sort()
-    doys = torch.cat((doys, missing_doys))
+    missing_doys, _ = missing_doys.sort()    # sort missing doys
+    doys = torch.cat((doys, missing_doys)) # cat 
     doys, indices = doys.sort()
-    indices = indices.view(-1, 1, 1).repeat(1, ts.shape[1], ts.shape[2])
-    ts = torch.gather(ts, index=indices, dim=0)
+    indices = indices.view(-1, 1, 1).repeat(1, ts.shape[1], ts.shape[2])    # sort doys
+    ts = torch.gather(ts, index=indices, dim=0) # sort ts just like doys
     return ts
 
 
 def get_params(model: torch.nn.Module):
-    '''TODO: compute the number of trainable parameters of a model.
-    '''
-    raise NotImplementedError
+    '''Compute the number of trainable parameters of a model.'''
+    return sum(p.numel() for p in model.parameters() if p.requires_grad)
 
 
 def get_flops(model, inp: Union[torch.Tensor, Tuple], with_backward=False):

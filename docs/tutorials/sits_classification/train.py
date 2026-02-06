@@ -31,12 +31,19 @@ def main(cfg):
     n_classes = len(np.unique(dataset.labels))
     padding = Padding(pad_value=cfg['pad_value'])
 
-    train_data_loader = torch.utils.data.DataLoader(
-        ...
+
+    train_data_loader=torch.utils.data.DataLoader(
+    train_dataset,
+    collate_fn=padding.pad_collate,  
+    batch_size=cfg['batch_size'],
+    shuffle=True,
     )
 
-    val_data_loader = torch.utils.data.DataLoader(
-        ...
+    val_data_loader = torch.utils.data.DataLoader(  #collate fn : add 0 and put it all in tensor for minibatch
+    val_dataset,
+    collate_fn=padding.pad_collate,  
+    batch_size=cfg['batch_size'],
+    shuffle=False,
     )
 
     encoder = Transformer(
@@ -111,8 +118,8 @@ def main(cfg):
             z, _ = encoder(data, doys)
             logits = classifier(z)
             loss = criterion(logits, labels)
-            pred = ...
-            accuracy = ...
+            pred = torch.argmax(logits,dim=1)
+            accuracy = (pred==labels).float().mean().item()     # gets python float, not tensor
 
             loss.backward()
             optimizer.step()
@@ -136,8 +143,8 @@ def main(cfg):
                 z, _ = encoder(data, doys)
                 logits = classifier(z)
             loss = criterion(logits, labels)
-            pred = ...
-            accuracy = ...
+            pred = torch.argmax(logits,dim=1)
+            accuracy = (pred==labels).float().mean().item()
 
             val_loss += loss.item() / len(val_data_loader)
             val_acc += accuracy / len(val_data_loader)

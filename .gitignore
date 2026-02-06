@@ -1,2 +1,6 @@
 *__pycache__
 *.ipynb_checkpoints
+.DS_Store
+docs/tutorials/**/data/
+docs/tutorials/**/results/
+docs/tutorials/sits_classification/s2_agri_pixel_set/
