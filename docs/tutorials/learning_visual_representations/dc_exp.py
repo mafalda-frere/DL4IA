@@ -106,10 +106,10 @@ def main(cfg):
             data = data.to(device)
             labels = labels.to(device)
 
-            logits = ...
-            loss = ...
-            pred = ...
-            accuracy = ...
+            logits = model(data)
+            loss = F.cross_entropy(logits,labels)
+            pred = torch.argmax(logits, dim=1)
+            accuracy = (pred==labels).float().mean()
 
             loss.backward()
             optimizer.step()
@@ -128,11 +128,11 @@ def main(cfg):
             labels = labels.to(device)
 
             with torch.no_grad():
-                logits = ...
+                logits = model(data)
 
-            loss = ...
-            pred = ...
-            accuracy = ...
+            loss = F.cross_entropy(logits,labels)
+            pred = torch.argmax(logits, dim=1)
+            accuracy = (pred==labels).float().mean()
 
             val_loss += loss.item() / len(val_data_loader)
             val_acc += accuracy / len(val_data_loader)
@@ -153,7 +153,6 @@ def main(cfg):
     print("Best validation loss: {:.2f}".format(val_loss))
     print("Best validation accuracy: {:.2f}".format(val_acc))
 
-    ...
             
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

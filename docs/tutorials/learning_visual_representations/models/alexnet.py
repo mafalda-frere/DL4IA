@@ -79,9 +79,16 @@ class AlexNet(nn.Module):
                 m.weight.data.normal_(0, 0.01)
                 m.bias.data.zero_()
 
-    def freeze_feature_layers(self):
+    def freeze_feature_layers(self): # désactive la rétropropagation du gradient pour les couches d'alexnet
+    # en gros on freeze toutes les couches d'alex net et on garde unfreeze uniquement le MLP branché dessus
+    # mettre require_grad à false 
+    # appelé à l'init du modèle
         """TODO: complete.
         """
+        for param in self.features.parameters():    # parcours des paramètres des features
+            param.requires_grad=False
+            
+
 
 
 def make_layers_features(cfg, input_dim, bn):

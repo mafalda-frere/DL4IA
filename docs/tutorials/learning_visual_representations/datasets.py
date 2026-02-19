@@ -36,13 +36,13 @@ class ImageNet(Dataset):
         img = read_image(file_path)
 
         # Convert to tensor
-        ...
+        img=torch.tensor(img)
 
         # Permute axis
-        ...
+        img=img.permute(2,0,1)
 
         # Convert to float in [0, 1]
-        ...
+        img=img.float()/255.0
 
         if self.transform is not None:
             img = self.transform(img)
